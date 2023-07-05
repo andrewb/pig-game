@@ -23,6 +23,7 @@ G = () => new Proxy(
     // not need to be calculated, e.g. using `reduce`, which
     // saves bytes.
     t: 0,
+    d: ''
   },
   {
     // a = target
@@ -37,6 +38,7 @@ N = () => {
   // Empty rolls
   s.r = [];
   s.t = 0;
+  s.d = '';
   // Game is hardcoded with 2 players
   // Use `s.p.length` to support a dynamic number of players
   s.i = (s.i + 1) % 2;
@@ -71,7 +73,11 @@ T = async (a) => {
   // a = result of roll
   // Set "is rolling" flag for UI updates
   s.g = 1;
-  await new Promise((a) => setTimeout(a, 1e3));
+  s.d = '';
+  while (s.d != '...') {
+    s.d += '.';
+    await new Promise((a) => setTimeout(a, 100));
+  }
   // Unset "is rolling" flag
   s.g = 0;
   // Roll dice
@@ -81,6 +87,8 @@ T = async (a) => {
   s.r = [...s.r, a];
   // Add roll to turn total
   s.t += a;
+  // Set dice face for UI updates
+  s.d = `&#${9855 + a};`;
 
   if (a < 2) {
     // Lose turn if roll is 1
@@ -101,7 +109,7 @@ A = async () => {
   // or the AI wins.
   while (!(s.i < 1 || s.w)) {
     // Add delay to AI actions
-    await new Promise((a) => setTimeout(a, 1e3));
+    await new Promise((a) => setTimeout(a, s.t < 20 ? 300 : 1e3));
     // AI will roll if their turn total is
     // less than 20. Otherwise, they will hold
     // and end their turn.
@@ -115,13 +123,16 @@ A = async () => {
 
 // (D)raw
 D = (a, b, c) => {
-  a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><p class="${s.g ? 'g' : 'd'}">${s.g < 1 && s.r.length ? s.r[s.r.length - 1] : ''}</p><p>${s.l ? 'LOSE TURN' : s.r.join("+") || ''}</p></div>`;
+  a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><b class="d ${s.g || 'z'}">${s.d || '?'}</b><p>${s.l ? 'LOSE TURN' : s.r.join("+") || '&nbsp;'}</p></div>`;
   b = !(s.i || s.g || s.l) ? `<div><button onclick="T()">ROLL</button></div><div><button onclick="E()">HOLD</button></div>` : '';
   c = s.w ? `<div id="x"><p>${s.w.n} Wins</p><button onclick="R()">PLAY</button></div>` : '';
   m.innerHTML = c || `${a}${b}`;
 };
 
-y.innerHTML = `<style>*{font:1em monospace}div{width:50%;float:left;text-align:center}#x{width:100%;font:2em monospace}@keyframes r{100%{transform:rotate(360deg)}}.d,.g{margin:auto;width:4em;height:4em;line-height:4em;background:red}.g{animation:r 1s}</style>`
+// Set meta viewport tag and styles
+// It's a real shame how expensive it is to set the viewport,
+// however the mobile experience is important!
+y.innerHTML = `<meta name="viewport" content="width=device-width"><style>*{font:1rem/1 monospace;text-align:center}div{width:50%;float:left}#x{width:100%}p{font:2rem/1 monospace}.d{font:2rem/4 monospace}.z{font:8rem/1 monospace}</style>`
 
 // (R)eset
 // s = (s)tate
