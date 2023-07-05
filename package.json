@@ -1,0 +1,21 @@
+{
+  "name": "js1024-2023",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "terser-js": "terser index.js -c -m -o index.min.js",
+    "terser-html": "html-minifier-terser --collapse-whitespace --remove-comments --minify-css true index.html -o index.min.html",
+    "regpack-js": "regpack --reassignVars false --varsNotReassigned E,R,T,m,y index.min.js > index.min.reg.js",
+    "build": "npm run terser-js && npm run regpack-js && npm run terser-html && node merge.js",
+    "start": "serve ./build"
+  },
+  "author": "Andrew Berry",
+  "license": "ISC",
+  "devDependencies": {
+    "html-minifier-terser": "^7.2.0",
+    "regpack": "^5.0.1",
+    "serve": "^14.2.0",
+    "terser": "^5.18.2"
+  }
+}
