@@ -11,13 +11,17 @@ G = () => new Proxy(
     i: 0,
     // current player (r)olls
     r: [],
-    // rollin(g)
+    // is current player rollin(g)?
     g: 0,
-    // (l)ost turn
+    // (l)ose turn
     l: 0,
     // (w)inner
     w: 0,
     // (t)urn total
+    // While the turn total could be calculated from the
+    // rolls, storing it as a separate value means it does
+    // not need to be calculated, e.g. using `reduce`, which
+    // saves bytes.
     t: 0,
   },
   {
@@ -54,7 +58,6 @@ E = (a) => {
   // a = player
   a = s.p[s.i];
   // Add turn total to player score
-  // a.s += S();
   a.s += s.t;
   // Target score is 100
   // Go to next player if score is less than 100.
@@ -66,17 +69,17 @@ E = (a) => {
 // Play (T)urn
 T = async (a) => {
   // a = result of roll
-  // Set "rolling" flag for UI updates
+  // Set "is rolling" flag for UI updates
   s.g = 1;
   await new Promise((a) => setTimeout(a, 1e3));
-  // Unset "rolling" flag
+  // Unset "is rolling" flag
   s.g = 0;
   // Roll dice
   a = ~~(Math.random() * 6) + 1;
-  
   // Add roll to turn, note reassigning the array
   // will trigger the proxy's set handler.
   s.r = [...s.r, a];
+  // Add roll to turn total
   s.t += a;
 
   if (a < 2) {
