@@ -97,14 +97,14 @@ A = async () => {
   // Play as AI until it's the human's turn,
   // or the AI wins.
   while (!(s.i < 1 || s.w)) {
-    // AI will roll if the score for turn is
+    // Add delay to AI actions
+    await new Promise((a) => setTimeout(a, 1e3));
+    // AI will roll if their turn total is
     // less than 20. Otherwise, they will hold
     // and end their turn.
-    // if (S() < 20) {
     if (s.t < 20) {
       await T();
     } else {
-      await new Promise((a) => setTimeout(a, 1e3));
       E();
     }
   }
