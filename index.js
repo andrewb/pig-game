@@ -62,10 +62,10 @@ E = (a) => {
   // Add turn total to player score
   a.s += s.t;
   // Target score is 100
-  // Go to next player if score is less than 100.
   // Set the current player as the winner if their
   // score is 100 or more when they end their turn.
-  a.s < 100 ? N() : (s.w = a);
+  // Go to next player if score is less than 100.
+  a.s > 99 ? (s.w = a) : N();
 };
 
 // Play (T)urn
@@ -76,7 +76,7 @@ T = async (a) => {
   s.d = '';
   while (s.d != '...') {
     s.d += '.';
-    await new Promise((a) => setTimeout(a, 100));
+    await new Promise((a) => setTimeout(a, 99));
   }
   // Unset "is rolling" flag
   s.g = 0;
@@ -107,16 +107,16 @@ T = async (a) => {
 A = async () => {
   // Play as AI until it's the human's turn,
   // or the AI wins.
-  while (!(s.i < 1 || s.w)) {
+  // Assumes AI has index of 1
+  while (s.i > 0 && !s.w) {
     // Add delay to AI actions
     await new Promise((a) => setTimeout(a, s.t < 20 ? 300 : 1e3));
-    // AI will roll if their turn total is
-    // less than 20. Otherwise, they will hold
-    // and end their turn.
-    if (s.t < 20) {
-      await T();
-    } else {
+    // AI will stop rolling if their turn total is 20 or more,
+    // or if they will win the game.
+    if (s.t > 19 || s.p[s.i].s + s.t > 99) {
       E();
+    } else {
+      await T();
     }
   }
 };
