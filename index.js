@@ -124,17 +124,17 @@ A = async () => {
 // (D)raw
 D = (a, b, c) => {
   // Render main UI
-  a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><b class="d ${s.g || 'z'}">${s.d || '?'}</b><p>${s.l ? 'LOSE TURN' : s.r.join("+") || '&nbsp;'}</p></div>`;
-  // Show buttons if it's the human's turn, and they're not rolling, and they haven't lost their turn
-  b = !(s.i || s.g || s.l) ? `<div><button onclick="T()">ROLL</button></div><div><button onclick="E()">HOLD</button></div>` : '';
+  a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><b class="d ${s.g || 'z'}">${s.d || '?'}</b><p>${s.l ? 'Lose Turn' : s.r.join("+") || '&nbsp;'}</p></div>`;
+  // Show as if it's the human's turn, and they're not rolling, and they haven't lost their turn
+  b = !(s.i || s.g || s.l) ? `<div><a onclick="T()"><u>ROLL</u></a></div><div><a onclick="E()"><u>HOLD</u></a></div>` : '';
   // Show winner if set
-  c = s.w ? `<div id="x"><p>${s.w.n} Wins</p><button onclick="R()">PLAY</button></div>` : '';
+  c = s.w ? `<div id="x"><p>${s.w.n} Wins</p><a onclick="R()"><u>PLAY</u></a></div>` : '';
   m.innerHTML = c || `${a}${b}`;
 };
 // Set meta viewport tag and styles
 // It's a real shame how expensive it is to set the viewport,
 // however the mobile experience is important!
-y.innerHTML = `<meta name="viewport" content="width=device-width"><style>*{font:1rem/1 monospace;text-align:center}div{width:50%;float:left}#x{width:100%}p{font:2rem/1 monospace}.d{font:2rem/4 monospace}.z{font:8rem/1 monospace}</style>`
+y.innerHTML = `<meta name="viewport" content="width=device-width"><style>*{font:1rem/1 monospace;text-align:center}div{width:50%;float:left}#x{width:100%}p,u{font:2em/1 monospace}.d{font:2em/4 monospace}.z{font:8em/1 monospace}</style>`
 
 // (R)eset
 // s = (s)tate
