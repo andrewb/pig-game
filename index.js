@@ -123,12 +123,14 @@ A = async () => {
 
 // (D)raw
 D = (a, b, c) => {
+  // Render main UI
   a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><b class="d ${s.g || 'z'}">${s.d || '?'}</b><p>${s.l ? 'LOSE TURN' : s.r.join("+") || '&nbsp;'}</p></div>`;
+  // Show buttons if it's the human's turn, and they're not rolling, and they haven't lost their turn
   b = !(s.i || s.g || s.l) ? `<div><button onclick="T()">ROLL</button></div><div><button onclick="E()">HOLD</button></div>` : '';
+  // Show winner if set
   c = s.w ? `<div id="x"><p>${s.w.n} Wins</p><button onclick="R()">PLAY</button></div>` : '';
   m.innerHTML = c || `${a}${b}`;
 };
-
 // Set meta viewport tag and styles
 // It's a real shame how expensive it is to set the viewport,
 // however the mobile experience is important!
