@@ -25,7 +25,7 @@ async function embedJsInHtml() {
     let result;
 
     if (html.includes(SCRIPT_PLACEHOLDER)) {
-      result = html.replace(SCRIPT_PLACEHOLDER, `<script>${js}</script>`);
+      result = html.replace(SCRIPT_PLACEHOLDER, `<script>${js.replace('\n', '')}</script>`);
     }
 
     await fs.writeFile(OUTPUT_FILE, result, "utf-8");
