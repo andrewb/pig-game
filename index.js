@@ -72,15 +72,14 @@ E = (a) => {
 };
 
 // Play (T)urn
-T = async (a) => {
+T = async (a, b = 4) => {
   // a = result of roll
+  // b = counter
   // Set "is rolling" flag for UI updates
   s.g = 1;
-  // Reset dice face
-  s.d = '';
   // Roll dice animation
-  while (s.d != '...') {
-    s.d += '.';
+  while(b--) {
+    s.d = ['⬙', '⬗', '⬘', '⬖'][b];
     await new Promise((a) => setTimeout(a, 99));
   }
   // Unset "is rolling" flag
@@ -129,7 +128,7 @@ A = async () => {
 // (D)raw
 D = (a, b, c) => {
   // Render main UI
-  a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><b class="d ${s.g || 'z'}">${s.d || '?'}</b><p>${s.l ? 'Lose Turn!' : s.r.join("+") || '&nbsp;'}</p></div>`;
+  a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><b id="d">${s.d || '?'}</b><p>${s.l ? 'Lose Turn!' : s.r.join("+") || '&nbsp;'}</p></div>`;
   // Show as if it's the human's turn, and they're not rolling, and they haven't lost their turn
   b = !(s.i || s.g || s.l) ? `<div><a onclick="T()"><u>ROLL</u></a></div><div><a onclick="E()"><u>HOLD</u></a></div>` : '';
   // Show winner if set
@@ -139,9 +138,7 @@ D = (a, b, c) => {
 // Set meta viewport tag and styles
 // It's a real shame how expensive it is to set the viewport,
 // however the mobile experience is important!
-// Note, while it might seem counterintuitive to use `font:<size>/1 monospace`
-// for multiple elements, it takes advantage of regpack's string compression. 
-y.innerHTML = `<meta name="viewport" content="width=device-width"><style>*{font:1rem/1 monospace;text-align:center}div{width:50%;float:left}#x{width:100%}p,u{font:2em/1 monospace}.d{font:2em/4 monospace}.z{font:8em/1 monospace}</style>`
+y.innerHTML = `<meta name="viewport" content="width=device-width"><style>*{font:1rem/1 monospace;text-align:center}div{width:50%;float:left}#x{width:100%}p,u{font:2em/1 monospace}#d{font:8em/1 monospace}</style>`
 
 // (R)eset
 // s = (s)tate
