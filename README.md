@@ -1,6 +1,6 @@
 # Pig Game
 
-Pig game implemented in 1024 bytes.
+Pig game implemented in under 1024 bytes.
 
 Note, this code was written for the JS1024 code golf competition. I used as many tricks and techniques as possible to keep the size within the 1024 byte budget.
 

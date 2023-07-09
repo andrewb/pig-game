@@ -1,6 +1,6 @@
 // Pig Game
-// https://en.wikipedia.org/wiki/Pig_(dice_game)
 
+// (G)ame state
 G = () => new Proxy(
   {
     // (p)layers
@@ -9,20 +9,21 @@ G = () => new Proxy(
     // 0 = Human
     // 1 = AI
     i: 0,
-    // current player (r)olls
+    // (r)olls for current turn
     r: [],
-    // is current player rollin(g)?
-    g: 0,
-    // (l)ose turn
-    l: 0,
-    // (w)inner
-    w: 0,
     // (t)urn total
     // While the turn total could be calculated from the
     // rolls, storing it as a separate value means it does
     // not need to be calculated, e.g. using `reduce`, which
     // saves bytes.
     t: 0,
+    // is current player rollin(g)?
+    g: 0,
+    // (l)ose turn
+    l: 0,
+    // (w)inner
+    w: 0,
+    // (d)ice face
     d: ''
   },
   {
@@ -79,7 +80,8 @@ T = async (a, b = 4) => {
   s.g = 1;
   // Roll dice animation
   while(b--) {
-    s.d = ['⬙', '⬗', '⬘', '⬖'][b];
+    // s.d = ['⬙', '⬗', '⬘', '⬖'][b];
+    s.d = ['&#11033', '&#11031', '&#11032', '&#11030'][b];
     await new Promise((a) => setTimeout(a, 99));
   }
   // Unset "is rolling" flag
@@ -91,7 +93,7 @@ T = async (a, b = 4) => {
   s.r = [...s.r, a];
   // Add roll to turn total
   s.t += a;
-  // Set dice face for UI updates
+  // Set dice face
   s.d = `&#${9855 + a};`;
 
   if (a < 2) {
@@ -116,7 +118,7 @@ A = async () => {
     // Add delay to AI actions
     await new Promise((a) => setTimeout(a, s.t < 20 ? 300 : 1e3));
     // AI will stop rolling if their turn total is 20 or more,
-    // or if they will win the game.
+    // or if they have enough points to win the game.
     if (s.t > 19 || s.p[s.i].s + s.t > 99) {
       E();
     } else {
@@ -128,7 +130,7 @@ A = async () => {
 // (D)raw
 D = (a, b, c) => {
   // Render main UI
-  a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><b id="d">${s.d || '?'}</b><p>${s.l ? 'Lose Turn!' : s.r.join("+") || '&nbsp;'}</p></div>`;
+  a = `<div>${s.p[0].n}: ${s.p[0].s}</div><div>${s.p[1].n}: ${s.p[1].s}</div><div id="x"><p>${s.p[s.i].n}</p><b id="d">${s.d || '…'}</b><p>${s.l ? 'Lose Turn!' : s.r.join("+") || '&nbsp;'}</p></div>`;
   // Show as if it's the human's turn, and they're not rolling, and they haven't lost their turn
   b = !(s.i || s.g || s.l) ? `<div><a onclick="T()"><u>ROLL</u></a></div><div><a onclick="E()"><u>HOLD</u></a></div>` : '';
   // Show winner if set
